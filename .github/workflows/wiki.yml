@@ -26,8 +26,9 @@ jobs:
         path: .wiki
 
     - uses: actions/setup-node@v2
-    - name: Generate the Wiki Page
+    - name: Install github-wiki-sidebar  
       run: |
+        npm install github-wiki-sidebar     
         find .
     - name: Configure the GitHub wiki identity
       working-directory: .wiki
@@ -41,4 +42,4 @@ jobs:
       # --allow-empty may be good enough for almost all the situations,
       # but maybe you want to do `if git commit ... ; then` if you don't want to record an empty commit
       run: |
-        find .
+        ../node_modules/.bin/github-wiki-sidebar --git-push --silent
