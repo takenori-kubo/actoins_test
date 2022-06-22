@@ -10,8 +10,10 @@ jobs:
     steps:
       - name: Slack
         run: |
-          echo "{\"text\": \"Wiki ${ACTION}: ${TITLE}\n${URL}\"}" \
+          echo "{\"text\": \"Wiki ${ACTION}: ${TITLE}\n${URL}\"}" 
           set
+          npm
+          
         env:
           ACTION: ${{ github.event.pages[0].action }}
           TITLE: ${{ github.event.pages[0].title }}
