@@ -1,0 +1,19 @@
+name: Wiki
+
+on:
+  gollum
+
+jobs:
+  wiki-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Slack
+        run: |
+          echo "{\"text\": \"Wiki ${ACTION}: ${TITLE}\n${URL}\"}" \
+          set
+        env:
+          ACTION: ${{ github.event.pages[0].action }}
+          TITLE: ${{ github.event.pages[0].title }}
+          URL: ${{ github.event.pages[0].html_url }}
+          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
