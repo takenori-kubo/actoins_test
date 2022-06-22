@@ -1,21 +1,44 @@
-name: Wiki
+name: "Update Wiki"
 
 on:
-  gollum
+  push:
+    branches: [ main ]
 
 jobs:
-  wiki-update:
+  build:
     runs-on: ubuntu-latest
+    # You should set timeout in any kind of GitHub workflows
+    timeout-minutes: 5
 
     steps:
-      - name: Slack
-        run: |
-          echo "{\"text\": \"Wiki ${ACTION}: ${TITLE}\n${URL}\"}" 
-          set
-          npm
-          
-        env:
-          ACTION: ${{ github.event.pages[0].action }}
-          TITLE: ${{ github.event.pages[0].title }}
-          URL: ${{ github.event.pages[0].html_url }}
-          WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+    - name: Checkout the main repository
+      uses: actions/checkout@v2
+      # You need to set `with.fetch-depth` to 0 if you'll make diff in branches
+      # with:
+      #   fetch-depth: 0
+
+    - name: Checkout the wiki repository
+      uses: actions/checkout@v2
+      with:
+        repository: "${{ github.repository }}.wiki"
+        # As of Jul 2021, the default branch of a GitHub wiki is `master`, not `main`
+        ref: master
+        path: .wiki
+
+    - uses: actions/setup-node@v2
+    - name: Generate the Wiki Page
+      run: |
+        find .
+    - name: Configure the GitHub wiki identity
+      working-directory: .wiki
+      # "${GITHUB_ACTOR}@users.noreply.github.com" is associated to the actor without real emails
+      run: |
+        set -xe
+        git config user.name  "[bot] ${GITHUB_ACTOR}"
+        git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+    - name: Update the wiki page
+      working-directory: .wiki
+      # --allow-empty may be good enough for almost all the situations,
+      # but maybe you want to do `if git commit ... ; then` if you don't want to record an empty commit
+      run: |
+        find .
