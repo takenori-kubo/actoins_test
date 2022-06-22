@@ -28,8 +28,7 @@ jobs:
     - uses: actions/setup-node@v2
     - name: Install github-wiki-sidebar  
       run: |
-        npm install github-wiki-sidebar     
-        find .
+        npm install github-wiki-sidebar
     - name: Configure the GitHub wiki identity
       working-directory: .wiki
       # "${GITHUB_ACTOR}@users.noreply.github.com" is associated to the actor without real emails
@@ -42,4 +41,4 @@ jobs:
       # --allow-empty may be good enough for almost all the situations,
       # but maybe you want to do `if git commit ... ; then` if you don't want to record an empty commit
       run: |
-        ../node_modules/.bin/github-wiki-sidebar --git-push --silent
+        ../node_modules/.bin/github-wiki-sidebar --git-push --silent --skip-options
